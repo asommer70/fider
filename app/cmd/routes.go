@@ -192,6 +192,7 @@ func routes(r *web.Engine) *web.Engine {
 		api.Use(middlewares.IsAuthorized(enum.RoleCollaborator, enum.RoleAdministrator))
 
 		api.Get("/api/v1/users", apiv1.ListUsers())
+		api.Get("/api/v1/users/search", apiv1.SearchUsers())
 		api.Put("/api/v1/posts/:number", apiv1.UpdatePost())
 		api.Get("/api/v1/posts/:number/votes", apiv1.ListVotes())
 		api.Post("/api/v1/invitations/send", apiv1.SendInvites())
@@ -208,6 +209,8 @@ func routes(r *web.Engine) *web.Engine {
 		api.Post("/api/v1/tags", apiv1.CreateEditTag())
 		api.Put("/api/v1/tags/:slug", apiv1.CreateEditTag())
 		api.Delete("/api/v1/tags/:slug", apiv1.DeleteTag())
+		api.Put("/api/v1/users/:number", apiv1.ChangeUserRole())
+		api.Delete("/api/v1/users/:number", apiv1.DeleteUser())
 	}
 
 	return r

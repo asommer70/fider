@@ -1,6 +1,7 @@
 package apiv1
 
 import (
+	"fmt"
 	"github.com/getfider/fider/app"
 	"github.com/getfider/fider/app/actions"
 	"github.com/getfider/fider/app/models"
@@ -9,17 +10,36 @@ import (
 	"github.com/getfider/fider/app/models/query"
 	"github.com/getfider/fider/app/pkg/bus"
 	"github.com/getfider/fider/app/pkg/errors"
+	"github.com/getfider/fider/app/pkg/log"
 	"github.com/getfider/fider/app/pkg/web"
 )
 
 // ListUsers returns all registered users
 func ListUsers() web.HandlerFunc {
 	return func(c *web.Context) error {
+		message := "ListUsers...."
+		log.Debug(c, message)
 		allUsers := &query.GetAllUsers{}
 		if err := bus.Dispatch(c, allUsers); err != nil {
 			return c.Failure(err)
 		}
 		return c.Ok(allUsers.Result)
+	}
+}
+
+// FindUser returns based on uid, or reference
+func SearchUsers() web.HandlerFunc {
+	return func(c *web.Context) error {
+		ref := fmt.Sprintf("SearchUsers ref: %d", c.QueryParam("ref"))
+		log.Debug(c, ref)
+		getByReference := &query.GetUserByProvider{
+			Provider: c.QueryParam("ref"),
+			UID:      c.QueryParam("uid"),
+		}
+		if err := bus.Dispatch(c, getByReference); err != nil {
+			return c.Failure(err)
+		}
+		return c.Ok(getByReference.Result)
 	}
 }
 
@@ -71,5 +91,30 @@ func CreateUser() web.HandlerFunc {
 		return c.Ok(web.Map{
 			"id": user.ID,
 		})
+	}
+}
+
+func ChangeUserRole() web.HandlerFunc {
+	return func(c *web.Context) error {
+		input := new(actions.CreateUser)
+		if result := c.BindTo(input); !result.Ok {
+			return c.HandleValidation(result)
+		}
+
+		return c.Ok(web.Map{
+			"id": 2,
+		})
+	}
+}
+
+// DeleteUser erases current user personal data and sign them out
+func DeleteUser() web.HandlerFunc {
+	return func(c *web.Context) error {
+		if err := bus.Dispatch(c, &cmd.DeleteCurrentUser{}); err != nil {
+			return c.Failure(err)
+		}
+
+		c.RemoveCookie(web.CookieAuthName)
+		return c.Ok(web.Map{})
 	}
 }
