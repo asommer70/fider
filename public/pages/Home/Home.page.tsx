@@ -67,9 +67,11 @@ export default class HomePage extends React.Component<HomePageProps, HomePageSta
   };
 
   public render() {
+
     return (
       <div id="p-home" className="page container">
         <div className="row">
+          {Fider.session.isAuthenticated && Fider.session.user.role != 'visitor' ? (
           <div className="l-welcome-col col-md-4">
             <MultiLineText
               className="welcome-message"
@@ -81,7 +83,8 @@ export default class HomePage extends React.Component<HomePageProps, HomePageSta
               onTitleChanged={this.setTitle}
             />
           </div>
-          <div className="l-posts-col col-md-8">
+          ) : ''}
+          <div className={"l-posts-col " + (Fider.session.isAuthenticated && Fider.session.user.role != 'visitor' ? "col-md-8" : "col-md-12")}>
             {this.isLonely() ? (
               <Lonely />
             ) : this.state.title ? (
