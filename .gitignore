@@ -5,6 +5,8 @@ output/
 node_modules/
 .vscode/
 .idea/
+*.swp
+*.swo
 logs/
 
 fider

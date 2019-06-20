@@ -2,7 +2,7 @@ package actions
 
 import (
 	"context"
-
+	"fmt"
 	"github.com/getfider/fider/app/models/enum"
 	"github.com/getfider/fider/app/models/query"
 	"github.com/getfider/fider/app/pkg/bus"
@@ -27,7 +27,19 @@ func (input *CreateNewPost) Initialize() interface{} {
 
 // IsAuthorized returns true if current user is authorized to perform this action
 func (input *CreateNewPost) IsAuthorized(ctx context.Context, user *models.User) bool {
-	return user != nil
+	if user == nil {
+		return false
+	}
+
+	// Get authorized role/s from config.
+
+	// Check if user has that role.
+
+	fmt.Printf("\n\nuser: %v\n\n", user)           // &{1 Adam Sommer 0xc0002e2c60 asommer@ecrs.com 3 [0xc0003495c0]  gravatar http://dev.assets-fider.io:3000/avatars/gravatar/1/Adam%20Sommer 1}
+	fmt.Printf("\n\nuser.Role: %v\n\n", user.Role) // 3
+
+	//return user != nil
+	return true
 }
 
 // Validate if current model is valid

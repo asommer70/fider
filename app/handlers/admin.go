@@ -88,6 +88,23 @@ func UpdatePrivacy() web.HandlerFunc {
 	}
 }
 
+// UpdateCreatePosts update current tenant's create posts settings
+func UpdateCreatePosts() web.HandlerFunc {
+	return func(c *web.Context) error {
+		input := new(actions.UpdateTenantCreatePosts)
+		if result := c.BindTo(input); !result.Ok {
+			return c.HandleValidation(result)
+		}
+
+		updateSettings := &cmd.UpdateTenantCreatePostsSettings{Settings: input.Model}
+		if err := bus.Dispatch(c, updateSettings); err != nil {
+			return c.Failure(err)
+		}
+
+		return c.Ok(web.Map{})
+	}
+}
+
 // ManageMembers is the page used by administrators to change member's role
 func ManageMembers() web.HandlerFunc {
 	return func(c *web.Context) error {

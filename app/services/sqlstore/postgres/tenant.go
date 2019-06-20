@@ -28,6 +28,7 @@ type dbTenant struct {
 	LogoBlobKey    string           `db:"logo_bkey"`
 	CustomCSS      string           `db:"custom_css"`
 	Billing        *dbTenantBilling `db:"billing"`
+	CreatePosts    int              `db:"create_posts"`
 }
 
 func (t *dbTenant) toModel() *models.Tenant {
@@ -46,6 +47,7 @@ func (t *dbTenant) toModel() *models.Tenant {
 		IsPrivate:      t.IsPrivate,
 		LogoBlobKey:    t.LogoBlobKey,
 		CustomCSS:      t.CustomCSS,
+		CreatePosts:    t.CreatePosts,
 	}
 
 	if t.Billing != nil && t.Billing.TrialEndsAt.Valid {
@@ -134,6 +136,16 @@ func updateTenantPrivacySettings(ctx context.Context, c *cmd.UpdateTenantPrivacy
 		_, err := trx.Execute("UPDATE tenants SET is_private = $1 WHERE id = $2", c.Settings.IsPrivate, tenant.ID)
 		if err != nil {
 			return errors.Wrap(err, "failed update tenant privacy settings")
+		}
+		return nil
+	})
+}
+
+func updateTenantCreatePostsSettings(ctx context.Context, c *cmd.UpdateTenantCreatePostsSettings) error {
+	return using(ctx, func(trx *dbx.Trx, tenant *models.Tenant, user *models.User) error {
+		_, err := trx.Execute("UPDATE tenants SET create_posts = $1 WHERE id = $2", c.Settings.CreatePosts, tenant.ID)
+		if err != nil {
+			return errors.Wrap(err, "failed update tenant create posts settings")
 		}
 		return nil
 	})
@@ -255,8 +267,8 @@ func createTenant(ctx context.Context, c *cmd.CreateTenant) error {
 
 		var id int
 		err := trx.Get(&id,
-			`INSERT INTO tenants (name, subdomain, created_at, cname, invitation, welcome_message, status, is_private, custom_css, logo_bkey) 
-			 VALUES ($1, $2, $3, '', '', '', $4, false, '', '') 
+			`INSERT INTO tenants (name, subdomain, created_at, cname, invitation, welcome_message, status, is_private, custom_css, logo_bkey, create_posts) 
+			 VALUES ($1, $2, $3, '', '', '', $4, false, '', '', 1) 
 			 RETURNING id`, c.Name, c.Subdomain, now, c.Status)
 		if err != nil {
 			return err
@@ -284,7 +296,7 @@ func getFirstTenant(ctx context.Context, q *query.GetFirstTenant) error {
 		tenant := dbTenant{}
 
 		err := trx.Get(&tenant, `
-			SELECT t.id, t.name, t.subdomain, t.cname, t.invitation, t.welcome_message, t.status, t.is_private, t.logo_bkey, t.custom_css,
+			SELECT t.id, t.name, t.subdomain, t.cname, t.invitation, t.welcome_message, t.status, t.is_private, t.logo_bkey, t.custom_css, t.create_posts,
 						 tb.trial_ends_at AS billing_trial_ends_at,
 						 tb.subscription_ends_at AS billing_subscription_ends_at,
 						 tb.stripe_customer_id AS billing_stripe_customer_id,
@@ -310,7 +322,7 @@ func getTenantByDomain(ctx context.Context, q *query.GetTenantByDomain) error {
 		tenant := dbTenant{}
 
 		err := trx.Get(&tenant, `
-			SELECT t.id, t.name, t.subdomain, t.cname, t.invitation, t.welcome_message, t.status, t.is_private, t.logo_bkey, t.custom_css,
+			SELECT t.id, t.name, t.subdomain, t.cname, t.invitation, t.welcome_message, t.status, t.is_private, t.logo_bkey, t.custom_css, t.create_posts,
 						 tb.trial_ends_at AS billing_trial_ends_at,
 						 tb.subscription_ends_at AS billing_subscription_ends_at,
 						 tb.stripe_customer_id AS billing_stripe_customer_id,

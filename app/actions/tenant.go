@@ -178,3 +178,24 @@ func (input *UpdateTenantPrivacy) IsAuthorized(ctx context.Context, user *models
 func (input *UpdateTenantPrivacy) Validate(ctx context.Context, user *models.User) *validate.Result {
 	return validate.Success()
 }
+
+//UpdateTenantCreatePosts is the input model used to update tenant privacy settings
+type UpdateTenantCreatePosts struct {
+	Model *models.UpdateTenantCreatePosts
+}
+
+// Initialize the model
+func (input *UpdateTenantCreatePosts) Initialize() interface{} {
+	input.Model = new(models.UpdateTenantCreatePosts)
+	return input.Model
+}
+
+// IsAuthorized returns true if current user is authorized to perform this action
+func (input *UpdateTenantCreatePosts) IsAuthorized(ctx context.Context, user *models.User) bool {
+	return user != nil && user.Role == enum.RoleAdministrator
+}
+
+// Validate if current model is valid
+func (input *UpdateTenantCreatePosts) Validate(ctx context.Context, user *models.User) *validate.Result {
+	return validate.Success()
+}

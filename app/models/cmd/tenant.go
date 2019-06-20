@@ -18,6 +18,10 @@ type UpdateTenantPrivacySettings struct {
 	Settings *models.UpdateTenantPrivacy
 }
 
+type UpdateTenantCreatePostsSettings struct {
+	Settings *models.UpdateTenantCreatePosts
+}
+
 type UpdateTenantSettings struct {
 	Settings *models.UpdateTenantSettings
 }
