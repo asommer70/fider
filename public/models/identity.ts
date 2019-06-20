@@ -7,6 +7,7 @@ export interface Tenant {
   welcomeMessage: string;
   status: TenantStatus;
   isPrivate: boolean;
+  createPosts: number;
   logoBlobKey: string;
   billing?: {
     stripePlanID: string;

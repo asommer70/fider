@@ -21,6 +21,7 @@ type Tenant struct {
 	LogoBlobKey    string         `json:"logoBlobKey"`
 	Billing        *TenantBilling `json:"billing,omitempty"`
 	CustomCSS      string         `json:"-"`
+	CreatePosts    int            `json:"createPosts"`
 }
 
 //TenantBilling has all the billing information of given tenant
@@ -142,6 +143,11 @@ type ImageUploadData struct {
 //UpdateTenantPrivacy is the input model used to update tenant privacy settings
 type UpdateTenantPrivacy struct {
 	IsPrivate bool `json:"isPrivate"`
+}
+
+//UpdateTenantCreatePosts is the input model used to update tenant create posts settings
+type UpdateTenantCreatePosts struct {
+	CreatePosts int `json:"createPosts"`
 }
 
 //SignInByEmail is the input model when user request to sign in by email

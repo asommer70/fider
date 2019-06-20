@@ -31,12 +31,22 @@ func (input *CreateNewPost) IsAuthorized(ctx context.Context, user *models.User)
 		return false
 	}
 
-	// Get authorized role/s from config.
+	// Check user.Role is greater than Tenant.CreatePosts
+	//if user.Role < ctx.Tenant().CreatePosts {
+	//		return false
+	//	}
 
-	// Check if user has that role.
+	fmt.Printf("\n\nuser: %v\n\n", user) // &{1 Adam Sommer 0xc0002e2c60 asommer@ecrs.com 3 [0xc0003495c0]  gravatar http://dev.assets-fider.io:3000/avatars/gravatar/1/Adam%20Sommer 1}
+	// user.Tenant = &{1      0 false  <nil>  0}
 
-	fmt.Printf("\n\nuser: %v\n\n", user)           // &{1 Adam Sommer 0xc0002e2c60 asommer@ecrs.com 3 [0xc0003495c0]  gravatar http://dev.assets-fider.io:3000/avatars/gravatar/1/Adam%20Sommer 1}
-	fmt.Printf("\n\nuser.Role: %v\n\n", user.Role) // 3
+	fmt.Printf("user.Role: %v\n\n", user.Role)                             // 3
+	fmt.Printf("user.Tenant.ID: %v\n\n", user.Tenant.ID)                   // 3
+	fmt.Printf("user.Tenant.Name: %v\n\n", user.Tenant.Name)               // 3
+	fmt.Printf("user.Tenant.IsPrivate: %v\n\n", user.Tenant.IsPrivate)     // 3
+	fmt.Printf("user.Tenant.CreatePosts: %v\n\n", user.Tenant.CreatePosts) // 3
+	//fmt.Printf("ctx.Value: %v\n\n", context.WithValue(ctx, "CreatePosts", "Tenant")) // ...
+	//fmt.Printf("ctx.Tenant(): %v\n\n", ctx.Tenant())                         // ...
+	//fmt.Printf("ctx.Tenant().CreatePosts: %v\n\n", ctx.Tenant().CreatePosts) // 2
 
 	//return user != nil
 	return true
