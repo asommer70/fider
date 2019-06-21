@@ -44,8 +44,26 @@ What can we do better? This is the place for you to vote, discuss and share idea
 export default class HomePage extends React.Component<HomePageProps, HomePageState> {
   constructor(props: HomePageProps) {
     super(props);
+
+    let userRole = 1;
+    switch(Fider.session.user.role) { 
+      case 'administrator': { 
+        userRole = 3;
+        break; 
+      } 
+      case 'collaborator': { 
+        userRole = 2;
+        break; 
+      } 
+      default: { 
+        userRole = 1;
+        break; 
+      } 
+    } 
+
     this.state = {
-      title: ""
+      title: "",
+      userRole
     };
   }
 
@@ -72,20 +90,20 @@ export default class HomePage extends React.Component<HomePageProps, HomePageSta
     return (
       <div id="p-home" className="page container">
         <div className="row">
-          {Fider.session.isAuthenticated && Fider.session.user.role ? (
-          <div className="l-welcome-col col-md-4">
-            <MultiLineText
-              className="welcome-message"
-              text={Fider.session.tenant.welcomeMessage || defaultWelcomeMessage}
-              style="full"
-            />
-            <PostInput
-              placeholder={Fider.session.tenant.invitation || "Enter your suggestion here..."}
-              onTitleChanged={this.setTitle}
-            />
-          </div>
+          {Fider.session.isAuthenticated && this.state.userRole > Fider.session.tenant.createPosts ? (
+            <div className="l-welcome-col col-md-4">
+              <MultiLineText
+                className="welcome-message"
+                text={Fider.session.tenant.welcomeMessage || defaultWelcomeMessage}
+                style="full"
+              />
+              <PostInput
+                placeholder={Fider.session.tenant.invitation || "Enter your suggestion here..."}
+                onTitleChanged={this.setTitle}
+              />
+            </div>
           ) : ''}
-          <div className={"l-posts-col " + (Fider.session.isAuthenticated && Fider.session.user.role? "col-md-8" : "col-md-12")}>
+                  <div className={"l-posts-col " + (Fider.session.isAuthenticated && this.state.userRole > Fider.session.tenant.createPosts ? "col-md-8" : "col-md-12")}>
             {this.isLonely() ? (
               <Lonely />
             ) : this.state.title ? (
