@@ -67,7 +67,6 @@ export default class PrivacySettingsPage extends AdminBasePage<{}, PrivacySettin
       label: s.title
     }));
 
-    console.log('content() this.state:', this.state);
     return (
       <div>
         <Form>

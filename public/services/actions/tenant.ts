@@ -45,7 +45,6 @@ export const updateTenantPrivacy = async (isPrivate: boolean): Promise<Result> =
 };
 
 export const updateTenantCreatePosts = async (createPosts: number): Promise<Result> => {
-  console.log('updateTenantCreatePosts..... createPosts:', createPosts);
   return await http.post("/_api/admin/settings/createposts", {
     createPosts
   });

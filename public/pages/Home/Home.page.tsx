@@ -68,7 +68,6 @@ export default class HomePage extends React.Component<HomePageProps, HomePageSta
   };
 
   public render() {
-    console.log('Fider: ', Fider);
     let userRole = 1;
     switch(Fider.session.user.role) { 
       case 'administrator': { 
@@ -84,7 +83,6 @@ export default class HomePage extends React.Component<HomePageProps, HomePageSta
         break; 
       } 
     } 
-
 
     return (
       <div id="p-home" className="page container">
