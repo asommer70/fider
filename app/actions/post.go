@@ -2,7 +2,6 @@ package actions
 
 import (
 	"context"
-	"fmt"
 	"github.com/getfider/fider/app/models/enum"
 	"github.com/getfider/fider/app/models/query"
 	"github.com/getfider/fider/app/pkg/bus"
@@ -27,43 +26,22 @@ func (input *CreateNewPost) Initialize() interface{} {
 
 // IsAuthorized returns true if current user is authorized to perform this action
 func (input *CreateNewPost) IsAuthorized(ctx context.Context, user *models.User) bool {
+	// Disallow for unauthenticated users
 	if user == nil {
 		return false
 	}
 
-	fmt.Printf("\n\nuser: %v\n\n", user) // &{1 Adam Sommer 0xc0002e2c60 asommer@ecrs.com 3 [0xc0003495c0]  gravatar http://dev.assets-fider.io:3000/avatars/gravatar/1/Adam%20Sommer 1}
-	// user.Tenant = &{1      0 false  <nil>  0}
-
-	fmt.Printf("user.Role: %v\n\n", user.Role) // 3
-	fmt.Printf("app.TenantCtxKey: %v\n\n", app.TenantCtxKey)
-
+	// Get the tenant from the context
 	tenant, ok := ctx.Value(app.TenantCtxKey).(*models.Tenant)
 	if !ok {
 		return false
 	}
 
-	fmt.Printf("tenant.CreatePosts: %v\n\n", tenant.CreatePosts)
-
 	// Check user.Role is greater than Tenant.CreatePosts
-	//isAdmin := c.IsAuthenticated() && c.User().Role == enum.RoleAdministrator
 	if int(user.Role) < tenant.CreatePosts {
 		return false
 	}
 
-	//fmt.Printf("ctx.Value: %v\n\n", context.WithValue(ctx, "CreatePosts", "Tenant")) // ...
-	//fmt.Printf("ctx.Tenant(): %v\n\n", ctx.Tenant())                         // ...
-	//fmt.Printf("ctx.Tenant().CreatePosts: %v\n\n", ctx.Tenant().CreatePosts) // 2
-
-	//fmt.Printf("Printing user.Tenant methods.....: \n\n")
-	//tenant := reflect.TypeOf(user.Tenant)
-	//fmt.Printf("tenant.NumMethod(): %v\n\n", tenant)
-	//for i := 0; i < tenant.NumMethod(); i++ {
-	//	method := tenant.Method(i)
-	//	fmt.Println("method:", method)
-	//}
-	//fmt.Printf("\n----------------\nDone with Methods....\n\n")
-
-	//return user != nil
 	return true
 }
 
