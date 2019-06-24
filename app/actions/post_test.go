@@ -56,6 +56,31 @@ func TestCreateNewPost_ValidPostTitles(t *testing.T) {
 	}
 }
 
+//func TestCreateNewPost_InvalidUserRole(t *testing.T) {
+//	RegisterT(t)
+//
+//	bus.AddHandler(func(ctx context.Context, q *query.GetPostBySlug) error {
+//		if q.Slug == "a-funtimes-post" {
+//			q.Result = &models.Post{Slug: q.Slug}
+//			return nil
+//		}
+//		return app.ErrNotFound
+//	})
+//
+//	for _, title := range []string{
+//		"me",
+//		"",
+//		"  ",
+//		"signup",
+//		"A fun fun fun fun funtimes post.",
+//		"a FUN post",
+//	} {
+//		action := &actions.CreateNewPost{Model: &models.NewPost{Title: title}}
+//		result := action.Validate(context.Background(), nil)
+//		ExpectFailed(result, "title")
+//	}
+//}
+
 func TestSetResponse_InvalidStatus(t *testing.T) {
 	RegisterT(t)
 

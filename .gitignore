@@ -12,6 +12,7 @@ logs/
 fider
 fider.exe
 .env
+.test.env
 npm-debug.log
 
 profile.out

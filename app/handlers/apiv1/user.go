@@ -30,7 +30,7 @@ func ListUsers() web.HandlerFunc {
 // FindUser returns based on uid, or reference
 func SearchUsers() web.HandlerFunc {
 	return func(c *web.Context) error {
-		ref := fmt.Sprintf("SearchUsers ref: %d", c.QueryParam("ref"))
+		ref := fmt.Sprintf("SearchUsers ref: %s", c.QueryParam("ref"))
 		log.Debug(c, ref)
 		getByReference := &query.GetUserByProvider{
 			Provider: c.QueryParam("ref"),
