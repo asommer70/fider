@@ -1,3 +1,5 @@
+etc/ecrs.com.crt
+etc/ecrs.com.key
 data/
 tmp/
 dist/
