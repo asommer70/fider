@@ -35,6 +35,10 @@
       display: flex;
     }
 
+    a:nth-child(2) {
+      margin: 0 auto;
+    }
+
     @include media("sm") {
       height: 40px;
       .container {

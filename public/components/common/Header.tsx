@@ -75,6 +75,9 @@ export class Header extends React.Component<{}, HeaderState> {
               <TenantLogo size={100} />
               <span>{Fider.session.tenant.name}</span>
             </a>
+            <a href="https://dev-community.ecrs.com" target="_blank" className="c-menu-item-title community">
+              <img src="https://dev-community.ecrs.com/wp-content/uploads/2019/08/logo_catapult-community_grey.png" alt="Catapult Community logo"/>
+            </a>
             {showRightMenu && (
               <div onClick={this.showModal} className="c-menu-item-signin">
                 {Fider.session.isAuthenticated && <Avatar user={Fider.session.user} />}
